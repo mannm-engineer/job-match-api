@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: linkedin-scrape-cron
+  namespace: default
+spec:
+  schedule: "0 * * * *"  # hourly at minute 0
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: scraper
+              image: linkedin-scraper:latest
+              command: ["python", "app/scraper.py"]
+              env:
+                - name: DATABASE_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-secrets
+                      key: database_url
+                - name: LINKEDIN_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-secrets
+                      key: linkedin_user
+                - name: LINKEDIN_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-secrets
+                      key: linkedin_pass
+                - name: SEARCH_KEYWORD
+                  value: "software engineer"
+                - name: SEARCH_LOCATION
+                  value: ""
+          restartPolicy: OnFailure
