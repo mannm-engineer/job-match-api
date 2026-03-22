@@ -2,6 +2,12 @@ name: Render preview SVG
 
 on:
   workflow_dispatch: {}
+  push:
+    branches: [master]
+    paths:
+      - 'workspace/frontend/**'
+      - 'workspace/task_ui_preview.svg'
+      - '.github/workflows/screenshot.yml'
 
 jobs:
   render:
@@ -15,21 +21,32 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install http-server and Playwright
+      - name: Install frontend deps and Playwright
+        working-directory: ./workspace/frontend
         run: |
-          npm install -g http-server
+          npm install
           npm install playwright
           npx playwright install --with-deps
 
-      - name: Start static server
-        run: npx http-server . -p 8080 &
+      - name: Start frontend
+        working-directory: ./workspace/frontend
+        run: npm run dev -- --host 0.0.0.0 &
 
-      - name: Screenshot SVG to PNG
+      - name: Wait for frontend
         run: |
-          node -e "(async()=>{const {chromium}=require('playwright');const browser=await chromium.launch();const page=await browser.newPage({viewport:{width:1200,height:900}});await page.goto('http://127.0.0.1:8080/workspace/task_ui_preview.svg');await page.screenshot({path:'task_ui_preview.png', fullPage:true});await browser.close();})();"
+          for i in {1..30}; do
+            curl -I http://127.0.0.1:5173 && exit 0
+            sleep 2
+          done
+          exit 1
+
+      - name: Screenshot app
+        working-directory: ./workspace/frontend
+        run: |
+          node -e "(async()=>{const {chromium}=require('playwright');const browser=await chromium.launch();const page=await browser.newPage({viewport:{width:1440,height:960}});await page.goto('http://127.0.0.1:5173', {waitUntil:'networkidle'});await page.screenshot({path:'task_ui_preview.png', fullPage:true});await browser.close();})();"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: task-ui-screenshot
-          path: task_ui_preview.png
+          path: workspace/frontend/task_ui_preview.png
