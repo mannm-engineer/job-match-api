@@ -3,6 +3,16 @@ import axios from 'axios'
 
 const API = process.env.REACT_APP_API || '/api'
 
+const containerStyle = {
+  fontFamily: 'Inter, Arial, sans-serif',
+  padding: 24,
+  maxWidth: 1000,
+  margin: '0 auto'
+}
+const card = { background:'#fff', boxShadow:'0 1px 3px rgba(0,0,0,0.06)', padding:16, borderRadius:8 }
+const input = { width: '100%', padding:10, borderRadius:6, border:'1px solid #e5e7eb' }
+const button = { background:'#2563eb', color:'#fff', padding:'10px 14px', border:'none', borderRadius:6, cursor:'pointer' }
+
 export default function App(){
   const [tasks, setTasks] = useState([])
   const [title, setTitle] = useState('')
@@ -33,39 +43,56 @@ export default function App(){
   }
 
   return (
-    <div style={{padding:20,fontFamily:'Arial'}}>
-      <h2>Tasks</h2>
-      <form onSubmit={createTask} style={{marginBottom:20}}>
-        <div>
-          <input placeholder="Title" value={title} onChange={e=>setTitle(e.target.value)} style={{width:400,padding:8}} />
+    <div style={containerStyle}>
+      <h1 style={{marginBottom:8}}>Task Manager</h1>
+      <div style={{display:'grid', gridTemplateColumns:'1fr 2fr', gap:20}}>
+        <div style={card}>
+          <h3 style={{marginTop:0}}>Create Task</h3>
+          <form onSubmit={createTask}>
+            <div style={{marginBottom:10}}>
+              <input style={input} placeholder="Title" value={title} onChange={e=>setTitle(e.target.value)} />
+            </div>
+            <div style={{marginBottom:10}}>
+              <textarea style={{...input, height:100}} placeholder="Description" value={description} onChange={e=>setDescription(e.target.value)} />
+            </div>
+            <div>
+              <button style={button} type="submit">Create task</button>
+            </div>
+          </form>
         </div>
-        <div style={{marginTop:8}}>
-          <textarea placeholder="Description" value={description} onChange={e=>setDescription(e.target.value)} style={{width:400,height:80}} />
-        </div>
-        <div style={{marginTop:8}}>
-          <button type="submit">Create Task</button>
-        </div>
-      </form>
 
-      {loading ? <div>Loading...</div> : (
-        <table border="1" cellPadding="8">
-          <thead>
-            <tr><th>ID</th><th>Title</th><th>Status</th><th>Priority</th><th>Assignee</th><th>Created At</th></tr>
-          </thead>
-          <tbody>
-            {tasks.map(t=> (
-              <tr key={t.id}>
-                <td>{t.id}</td>
-                <td>{t.title}</td>
-                <td>{t.status}</td>
-                <td>{t.priority}</td>
-                <td>{t.assignee || '-'}</td>
-                <td>{t.created_at || '-'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        <div style={card}>
+          <h3 style={{marginTop:0}}>Tasks</h3>
+          {loading ? <div>Loading...</div> : (
+            <div style={{overflowX:'auto'}}>
+              <table style={{width:'100%', borderCollapse:'collapse'}}>
+                <thead>
+                  <tr style={{background:'#f8fafc', textAlign:'left'}}>
+                    <th style={{padding:10}}>ID</th>
+                    <th style={{padding:10}}>Title</th>
+                    <th style={{padding:10}}>Status</th>
+                    <th style={{padding:10}}>Priority</th>
+                    <th style={{padding:10}}>Assignee</th>
+                    <th style={{padding:10}}>Created</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tasks.map(t=> (
+                    <tr key={t.id} style={{borderBottom:'1px solid #f1f5f9'}}>
+                      <td style={{padding:10}}>{t.id}</td>
+                      <td style={{padding:10}}>{t.title}</td>
+                      <td style={{padding:10}}>{t.status}</td>
+                      <td style={{padding:10}}>{t.priority}</td>
+                      <td style={{padding:10}}>{t.assignee || '-'}</td>
+                      <td style={{padding:10}}>{t.created_at || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
