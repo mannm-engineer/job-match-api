@@ -1,0 +1,35 @@
+name: Render preview SVG
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install http-server and Playwright
+        run: |
+          npm install -g http-server
+          npm install playwright
+          npx playwright install --with-deps
+
+      - name: Start static server
+        run: npx http-server . -p 8080 &
+
+      - name: Screenshot SVG to PNG
+        run: |
+          node -e "(async()=>{const {chromium}=require('playwright');const browser=await chromium.launch();const page=await browser.newPage({viewport:{width:1200,height:900}});await page.goto('http://127.0.0.1:8080/workspace/task_ui_preview.svg');await page.screenshot({path:'task_ui_preview.png', fullPage:true});await browser.close();})();"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: task-ui-screenshot
+          path: task_ui_preview.png
