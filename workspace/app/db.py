@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Text, UniqueConstraint
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Text, UniqueConstraint, ForeignKey
+from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from sqlalchemy.sql import func
 from app.config import DATABASE_URL
 
@@ -20,6 +20,28 @@ class Job(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     __table_args__ = (UniqueConstraint('job_id', name='uq_job_jobid'),)
+
+class Task(Base):
+    __tablename__ = "tasks"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    description = Column(Text)
+    status = Column(String, default="todo")  # todo, in-progress, done
+    priority = Column(String, default="normal")
+    assignee = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    logs = relationship("TaskLog", back_populates="task")
+
+class TaskLog(Base):
+    __tablename__ = "task_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    task_id = Column(Integer, ForeignKey('tasks.id'), nullable=False)
+    message = Column(Text)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    task = relationship("Task", back_populates="logs")
+
 
 def init_db():
     Base.metadata.create_all(bind=engine)
