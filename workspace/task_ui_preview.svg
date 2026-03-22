@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">
+  <style>
+    .title { font: 24px Arial; fill: #111 }
+    .label { font: 14px Arial; fill: #333 }
+    .box { fill: #f9f9f9; stroke: #ddd }
+    .table-header { fill:#eee; stroke:#ccc }
+    .cell { font: 12px Arial; fill: #222 }
+  </style>
+  <rect x="0" y="0" width="1200" height="800" fill="#fff" />
+  <text x="20" y="40" class="title">Tasks</text>
+
+  <rect x="20" y="60" width="440" height="140" class="box"/>
+  <text x="30" y="90" class="label">Create Task</text>
+  <rect x="30" y="100" width="400" height="28" fill="#fff" stroke="#ccc" />
+  <text x="34" y="120" class="cell">Example task title</text>
+  <rect x="30" y="132" width="400" height="60" fill="#fff" stroke="#ccc" />
+  <text x="34" y="154" class="cell">Example task description</text>
+  <rect x="30" y="200" width="120" height="28" fill="#4CAF50" />
+  <text x="45" y="219" class="cell" style="fill:#fff">Create Task</text>
+
+  <g transform="translate(480,60)">
+    <rect x="0" y="0" width="680" height="700" fill="#fff" stroke="#eee" />
+    <text x="10" y="28" class="label">Task List</text>
+
+    <rect x="10" y="40" width="660" height="32" class="table-header" />
+    <text x="20" y="62" class="cell">ID</text>
+    <text x="80" y="62" class="cell">Title</text>
+    <text x="360" y="62" class="cell">Status</text>
+    <text x="460" y="62" class="cell">Priority</text>
+    <text x="540" y="62" class="cell">Assignee</text>
+    <text x="650" y="62" class="cell">Created At</text>
+
+    <rect x="10" y="72" width="660" height="40" fill="#fff" stroke="#f0f0f0" />
+    <text x="20" y="98" class="cell">1</text>
+    <text x="80" y="98" class="cell">Example task 1</text>
+    <text x="360" y="98" class="cell">todo</text>
+    <text x="460" y="98" class="cell">normal</text>
+    <text x="540" y="98" class="cell">-</text>
+    <text x="650" y="98" class="cell">2026-03-22</text>
+
+    <rect x="10" y="116" width="660" height="40" fill="#fff" stroke="#f0f0f0" />
+    <text x="20" y="142" class="cell">2</text>
+    <text x="80" y="142" class="cell">Follow up on job scraping</text>
+    <text x="360" y="142" class="cell">in-progress</text>
+    <text x="460" y="142" class="cell">high</text>
+    <text x="540" y="142" class="cell">agent-a</text>
+    <text x="650" y="142" class="cell">2026-03-22</text>
+
+    <rect x="10" y="160" width="660" height="40" fill="#fff" stroke="#f0f0f0" />
+    <text x="20" y="186" class="cell">3</text>
+    <text x="80" y="186" class="cell">Review results</text>
+    <text x="360" y="186" class="cell">done</text>
+    <text x="460" y="186" class="cell">normal</text>
+    <text x="540" y="186" class="cell">-</text>
+    <text x="650" y="186" class="cell">2026-03-21</text>
+  </g>
+</svg>
